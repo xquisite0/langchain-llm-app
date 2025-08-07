@@ -1,7 +1,6 @@
-from langchain_community.llms import OpenAI
+from langchain_openai import OpenAI
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
-from langchain.chains import LLMChain
 
 load_dotenv()
 
@@ -14,11 +13,9 @@ def generate_pet_name(animal_type, pet_color):
         template="I have a {animal_type} pet and I want a cool name for it. It is {pet_color} in color. Suggest me five cool names for my pet."
     )
 
-    # chains the llm & prompt template together
-    name_chain = LLMChain(llm=llm, prompt=prompt_template_name)
-    
-    response = name_chain({'animal_type': animal_type, 'pet_color': pet_color})
+    chain = prompt_template_name | llm
+    response = chain.invoke({'animal_type': animal_type, 'pet_color': pet_color})
     return response
 
 if __name__ == "__main__":
-    print(generate_pet_name("cat", "black"))
+    print(generate_pet_name("hamster", "brown"))
